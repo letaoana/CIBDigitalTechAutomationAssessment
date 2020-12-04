@@ -16,8 +16,8 @@ namespace UI.Tests
     {
         private IWebDriver driver;
         WebTablesPage page;
-        private User firstUser;
-        private User secondUser;
+        private User expectedFirstUser;
+        private User expectedSecondUser;
 
         [SetUp]
         public void Setup()
@@ -25,22 +25,20 @@ namespace UI.Tests
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
             page = new WebTablesPage(driver);
-            firstUser = new User("FName1", "LName1", Guid.NewGuid().ToString().Replace("-", ""), string.Empty, "Admin", "admin@mail.com", "082555");
-            secondUser = new User("FName2", "LName2", Guid.NewGuid().ToString().Replace("-", ""), string.Empty, "Customer", "cusomter@mail.com", "083444");
+            page.GoToPage();
+            expectedFirstUser = new User("FName1", "LName1", Guid.NewGuid().ToString().Replace("-", ""), string.Empty, "Admin", "admin@mail.com", "082555");
+            expectedSecondUser = new User("FName2", "LName2", Guid.NewGuid().ToString().Replace("-", ""), string.Empty, "Customer", "cusomter@mail.com", "083444");
         }
 
         [Test]
         public void GIVEN_UserIsOnUserTable_WHEN_UserAdds2NewUsers_THEN_UserListTableShouldHaveDetailsOf2NewUsers()
-        {
-            page.GoToPage();
+        {            
             Assert.IsTrue(page.GetUserTable().Displayed);
-            page.FillAddUserForm(firstUser, "Pass1", CustomerEnum.CompanyAAA, RoleEnum.Admin);
-            page.FillAddUserForm(secondUser, "Pass2", CustomerEnum.CompanyBBB, RoleEnum.Customer);
+            page.FillAddUserForm(expectedFirstUser, "Pass1", CustomerEnum.CompanyAAA, RoleEnum.Admin);
+            page.FillAddUserForm(expectedSecondUser, "Pass2", CustomerEnum.CompanyBBB, RoleEnum.Customer);
 
-            var actualFirstAddedUser = page.GetUserByUsername(firstUser.Username);
-            var actualSecondAddedUser = page.GetUserByUsername(secondUser.Username);
-            actualFirstAddedUser.Should().BeEquivalentTo(firstUser);
-            actualSecondAddedUser.Should().BeEquivalentTo(secondUser);
+            page.GetUserByUsername(expectedFirstUser.Username).Should().BeEquivalentTo(expectedFirstUser);
+            page.GetUserByUsername(expectedSecondUser.Username).Should().BeEquivalentTo(expectedSecondUser);
         }
 
         [TearDown]

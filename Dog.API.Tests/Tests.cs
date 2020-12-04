@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Dog.API.Tests
@@ -30,7 +31,8 @@ namespace Dog.API.Tests
             JsonConvert.DeserializeObject<Breed>(await dogApi.GetAllBreeds()).Message.Keys.Should().Contain(breed);
             JsonConvert.DeserializeObject<SubBreed>(await dogApi.GetByBreed(breed)).Message.Should().NotBeNullOrEmpty();
             JsonConvert.DeserializeObject<IDictionary<string, Uri>>(await dogApi.GetSingleRandomImage(breed, subBreed)).TryGetValue("message", out Uri actualImageLink);
-            actualImageLink.ToString().Should().StartWith($"https://images.dog.ceo/breeds/{breed}-{subBreed}/");
+            var match = Regex.Match(actualImageLink.ToString(), "^https?://.*", RegexOptions.IgnoreCase);
+            Assert.IsTrue(match.Success);
         }        
     }
 }
