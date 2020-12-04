@@ -31,6 +31,7 @@ Nuget Package:
 # To execute tests, you need to:
 
 1. Browse to the CIBDigitalTechAutomationAssessment folder in the cloned repo location
+2. Copy the **DogApiTestData.csv** file to a bin folder from the Dog.API.Tests project
 2. Click on **.sln** file to launch project in Visual Studio
 3. Click on View tab in the top Menu
 4. Click on Solution Explorer

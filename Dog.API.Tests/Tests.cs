@@ -16,13 +16,6 @@ namespace Dog.API.Tests
     [AllureSuite("Dog.Api.Tests")]
     public class Tests
     {
-        [OneTimeSetUp]
-        public void Setup()
-        {
-            if(!Directory.Exists("C:\\allure-results"))
-                Directory.CreateDirectory("C:\\allure-results");
-        }
-
         [TestCaseSource(typeof(TestData), nameof(TestData.GetTestCases))]
         public async Task GIVEN_ListAllSubBreedsEndPoint_WHEN_SendingRequest_THEN_ShouldReturnListOfSubBreedsForABreed(string breed, string subBreed)
         {
