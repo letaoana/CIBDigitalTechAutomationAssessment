@@ -26,9 +26,9 @@ Nuget Package:
 4. Use allure.bat for Windows or allure for other Unix platforms.
 5. Add allure to system PATH.
 
-### TEST EXECUTION:
+## TEST EXECUTION:
 
-# To execute tests, you need to:
+To execute tests, you need to:
 
 1. Browse to the CIBDigitalTechAutomationAssessment folder in the cloned repo location
 2. Copy the **DogApiTestData.csv** file to a bin folder from the Dog.API.Tests project
