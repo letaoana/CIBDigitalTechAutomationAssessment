@@ -25,7 +25,7 @@ namespace Dog.API.Tests
                         string breed = split[0];
                         string subBreed = split[1];
 
-                        var testCase = new NUnit.Framework.TestCaseData(breed, subBreed);
+                        var testCase = new TestCaseData(breed, subBreed);
                         testCases.Add(testCase);
                     }
                 }

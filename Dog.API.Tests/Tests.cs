@@ -1,8 +1,9 @@
+using AventStack.ExtentReports;
+using AventStack.ExtentReports.Reporter;
+using Common.Utilities.Converters;
 using Dog.API.Models;
 using FluentAssertions;
 using Newtonsoft.Json;
-using NUnit.Allure.Attributes;
-using NUnit.Allure.Core;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,17 @@ using System.Threading.Tasks;
 
 namespace Dog.API.Tests
 {
-    [AllureNUnit]
-    [AllureSuite("Dog.Api.Tests")]
     public class Tests
     {
+        private ExtentReports extent;
+
+        [OneTimeSetUp]
+        public void Initialize()
+        {
+            extent = new ExtentReports();
+            extent.AttachReporter(new ExtentHtmlReporter(Path.Combine(Directory.GetCurrentDirectory(), @"ExtentReports\")));
+        }
+
         [TestCaseSource(typeof(TestData), nameof(TestData.GetTestCases))]
         public async Task GIVEN_ListAllSubBreedsEndPoint_WHEN_SendingRequest_THEN_ShouldReturnListOfSubBreedsForABreed(string breed, string subBreed)
         {
@@ -26,6 +34,13 @@ namespace Dog.API.Tests
             JsonConvert.DeserializeObject<IDictionary<string, Uri>>(await dogApi.GetSingleRandomImage(breed, subBreed)).TryGetValue("message", out Uri actualImageLink);
             var match = Regex.Match(actualImageLink.ToString(), "^https?://.*", RegexOptions.IgnoreCase);
             Assert.IsTrue(match.Success);
-        }        
+        }
+
+        [TearDown]
+        public void CleanUp()
+        {
+            extent.CreateTest(TestContext.CurrentContext.Test.Name).Log(StatusConverter.Convert((int)TestContext.CurrentContext.Result.Outcome.Status), TestContext.CurrentContext.Result.Message);
+            extent.Flush();
+        }
     }
 }

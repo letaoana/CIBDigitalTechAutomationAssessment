@@ -1,23 +1,32 @@
+using AventStack.ExtentReports;
+using AventStack.ExtentReports.Reporter;
+using Common.Utilities.Converters;
 using FluentAssertions;
-using NUnit.Allure.Attributes;
-using NUnit.Allure.Core;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using POM.Enums;
 using POM.PageObjects;
 using System;
+using System.IO;
 
 namespace UI.Tests
 {
-    [AllureNUnit]
-    [AllureSuite("AddUser.UI.Tests")]
     public class Tests
     {
+
+        [OneTimeSetUp]
+        public void Initialize()
+        {
+            extent = new ExtentReports();
+            extent.AttachReporter(new ExtentHtmlReporter(Path.Combine(Directory.GetCurrentDirectory(), @"ExtentReports\")));
+        }
+
         private IWebDriver driver;
         WebTablesPage page;
         private User expectedFirstUser;
         private User expectedSecondUser;
+        private ExtentReports extent;
 
         [SetUp]
         public void Setup()
@@ -44,6 +53,8 @@ namespace UI.Tests
         [TearDown]
         public void CleanUp()
         {
+            extent.CreateTest(TestContext.CurrentContext.Test.Name).Log(StatusConverter.Convert((int)TestContext.CurrentContext.Result.Outcome.Status), TestContext.CurrentContext.Result.Message);
+            extent.Flush();
             driver.Quit();
         }
     }
